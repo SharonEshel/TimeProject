@@ -2,7 +2,10 @@
 // Created by sharon on 9/21/20.
 //
 #include <sstream>
+#include <iostream>
+#include <cstdio>
 #include "my_time.h"
+using namespace std;
 
 //default delimiters
 char Time::dayDelimiter='.';
@@ -30,88 +33,81 @@ string nicelyNumberString(string st){
     return st;
 }
 
-string convertIntToStringNicely(int num) {
-    stringstream ss;
-    ss<<num;
-    return nicelyNumberString( ss.str());
-}
-
-string convertIntToString(int num) {
-    stringstream ss;
-    ss<<num;
-    return ss.str();
-}
-
-string Time::get_as_str(bool is_using_days) const{
-    if(is_using_days) {
-        return convertIntToString(hours / 24)+ Time::dayDelimiter+convertIntToStringNicely(hours%24) +
-        Time::formatDelimiter+convertIntToStringNicely((int)minutes) +Time::formatDelimiter +
-        convertIntToStringNicely((int)seconds)+"\n";
-        }
-    return convertIntToStringNicely(hours) +Time::formatDelimiter+convertIntToStringNicely((int)minutes) +
-            Time::formatDelimiter +convertIntToStringNicely((int)seconds)+"\n";
+string Time::get_as_str(bool is_using_days) const {
+    char s[20];
+    if (is_using_days) {
+        sprintf(s, "%d%c%02d%c%02d%c%02d\n", (hours / 24), Time::dayDelimiter, hours % 24, Time::formatDelimiter,
+                minutes, Time::formatDelimiter,
+                seconds);
+        return s;
+    }
+    sprintf(s, "%02d%c%02d%c%02d\n", hours, Time::formatDelimiter, minutes, Time::formatDelimiter, seconds);
+    return s;
 }
 
 int Time:: get_seconds() const{
     return hours*3600+minutes*60+seconds;
 }
 
-Time Time:: operator+(const Time& t2)const {
-    int seconds= get_seconds()+t2.get_seconds();
+Time operator+(const Time& t1,const Time& t2) {
+    int seconds= t1.get_seconds()+t2.get_seconds();
     return Time(seconds);
 }
 
-Time Time::operator+(const unsigned long num) const{
-    return Time(get_seconds()+num);
+ Time operator+(const Time& t1,const unsigned long num) {
+    return Time(t1.get_seconds()+num);
 }
 
 
-Time& Time::operator+=(const unsigned long num) {
-    *this=Time(get_seconds()+num);
-    return *this;
+Time& operator+=( Time& t1,const unsigned long num) {
+    t1=Time(t1.get_seconds()+num);
+    return t1;
 }
 
-bool Time::operator==(const Time& t) const {
-    if(get_seconds()==t.get_seconds())
+bool operator==(const Time& t1,const Time& t) {
+    if(t1.get_seconds()==t.get_seconds())
         return true;
     return false;
 }
 
-bool Time::operator!=(const Time& t) const {
-    if(get_seconds()!=t.get_seconds())
+bool operator!=(const Time& t1,const Time& t)  {
+    if(t1.get_seconds()!=t.get_seconds())
         return true;
     return false;
 }
 
-bool Time::operator<(const Time& t) const {
-    if(get_seconds()<t.get_seconds())
+bool operator<(const Time& t1,const Time& t)  {
+    if(t1.get_seconds()<t.get_seconds())
         return true;
     return false;
 }
 
-bool Time::operator<=(const Time& t) const {
-    if(get_seconds()<=t.get_seconds())
+bool operator<=(const Time& t1,const Time& t)  {
+    if(t1.get_seconds()<=t.get_seconds())
         return true;
     return false;
 }
 
-bool Time::operator>(const Time& t) const {
-    if(get_seconds()>t.get_seconds())
+bool operator>(const Time& t1,const Time& t)  {
+    if(t1.get_seconds()>t.get_seconds())
         return true;
     return false;
 }
 
-bool Time::operator>=(const Time& t) const {
-    if(get_seconds()>=t.get_seconds())
+bool operator>=(const Time& t1,const Time& t)  {
+    if(t1.get_seconds()>=t.get_seconds())
         return true;
     return false;
 }
 
 ostream &operator<<(ostream &out, const Time &t) {
+    char s[20];
+    sprintf(s, "%d%c%02d%c%02d%c%02d\n", (t.hours / 24), Time::dayDelimiter, t.hours % 24, Time::formatDelimiter,
+            t.minutes, Time::formatDelimiter,
+            t.seconds);
+    out<<s;
 
-    out<<convertIntToString(t.hours/24)<<Time::dayDelimiter<<convertIntToStringNicely(t.hours%24) <<
-        Time::formatDelimiter<<convertIntToStringNicely(t.minutes)<<Time::formatDelimiter<<
-        convertIntToStringNicely(t.seconds)<<"\n";
+
     return out;
 }
 

@@ -5,20 +5,17 @@
 #ifndef TIMEPROJECT_MSG_PRINTER_H
 #define TIMEPROJECT_MSG_PRINTER_H
 #include <iostream>
-#include <string.h>
+//#include <string.h>
 #include "my_time.h"
-using namespace std;
+//using namespace std;
 
 class MsgPrinter{
-private:
-
-    string message;
 public:
     /**
     * constructor
     * @param myMessage- string to initialize "message"
     */
-    MsgPrinter(const string);
+    MsgPrinter(const std::string);
     /**
      * destructor
      */
@@ -31,19 +28,18 @@ public:
      * getter for "message"
      * @return- "message" string
      */
-    string getMessage() const;
+    std::string getMessage() const;
     /**
     * setter for "message"
     * @param st- a string to change "message" to
     */
-    void setMessage(const string&);
+    void setMessage(const std::string&);
+
+private:
+    std::string message;
 };
 
 class Timer{
-private:
-    Time target;
-    Time clock;
-    MsgPrinter* pprinter;
 public:
     /**
     * constructor
@@ -78,13 +74,13 @@ public:
      *              if equals to “H”, “h”, “Hour”, “hour” increments in one hour
      *              else throws invalid_argument exception
      */
-    inline void tick(string st) {
+    inline void tick(std::string st) {
         if(st=="M"||st=="m"||st=="Min"||st=="min"||st=="Minute" ||st=="minute")
             clock+=60;
         else if(st=="H"|| st=="h"|| st=="Hour"|| st=="hour")
             clock+=3600;
         else
-            throw invalid_argument("The string argument is invalid");
+            throw std::invalid_argument("The string argument is invalid");
         if(clock>=target)
             pprinter->print();
     }
@@ -94,7 +90,7 @@ public:
      *              if equals to “H”, “h”, “Hour”, “hour” increments in some  hour
      * @param num- number of minutes/seconds to increment
      */
-    inline void tick(string st, unsigned int num) {
+    inline void tick(std::string st, unsigned int num) {
         if (st == "M" || st == "m" || st == "Min" || st == "min" || st == "Minute" || st == "minute")
             clock += 60 * num;
         else if (st == "H" || st == "h" || st == "Hour" || st == "hour")
@@ -102,12 +98,13 @@ public:
         if (clock >= target)
             pprinter->print();
     }
+private:
+    Time target;
+    Time clock;
+    MsgPrinter* pprinter;
 };
 
 class MsgPrinterSurrounding: public MsgPrinter{
-private:
-    char* before;
-    char* after;
 protected:
     /**
      * prints print_before
@@ -124,7 +121,7 @@ public:
     * @param before_msg- the string to print before message
     * @param after_msg- the string to print after message
     */
-    MsgPrinterSurrounding(const string& st, char* const before_msg=0,  char* const after_msg=0);
+    MsgPrinterSurrounding(const std::string& st, char* const before_msg=0,  char* const after_msg=0);
     /**
     * copy constructor
     * @param mps- the object to copy
@@ -143,19 +140,12 @@ public:
      * prints the before_msg,message and  after_msg
      */
     virtual void print() override;
+private:
+    char* before;
+    char* after;
 };
 
 class MsgPrinterMultipleSurrounding: public MsgPrinterSurrounding{
-protected:
-    unsigned char times;
-    /**
-     * prints print_before "times" times
-     */
-    virtual void print_before() override;
-    /**
-     * prints print_after "times" times
-     */
-    void print_after();
 public:
     /**
     *constructor
@@ -164,7 +154,7 @@ public:
      * @param before_msg- the string to print before message
     * @param after_msg- the string to print after message
     */
-    MsgPrinterMultipleSurrounding(const string& st,const char ch=2,char* const before_msg=0,char* const after_msg=0);
+    MsgPrinterMultipleSurrounding(const std::string& st,const char ch=2,char* const before_msg=0,char* const after_msg=0);
     /**
     * copy constructor
     */
@@ -184,6 +174,15 @@ public:
      */
     unsigned char get_times() const;
 
-
+protected:
+    unsigned char times;
+    /**
+     * prints print_before "times" times
+     */
+    virtual void print_before() override;
+    /**
+     * prints print_after "times" times
+     */
+    void print_after();
 };
 #endif //TIMEPROJECT_MSG_PRINTER_H

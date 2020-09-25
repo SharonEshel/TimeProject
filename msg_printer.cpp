@@ -3,6 +3,7 @@
 //
 
 #include "msg_printer.h"
+using namespace std;
 
 MsgPrinter::MsgPrinter(const string myMessage):message(myMessage) {
 }

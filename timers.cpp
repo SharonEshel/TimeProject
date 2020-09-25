@@ -5,7 +5,9 @@
 #include "timers.h"
 #include <unistd.h>
 #include <list>
-#include <iterator>
+//#include <iterator>
+#include <iostream>
+using namespace std;
 
 void run_timer_1() {
     Time t(1,30);
@@ -61,7 +63,7 @@ void run_timer_3(){
 }
 
 void run_timer_4(){
-    MsgPrinter* printers[3]={new MsgPrinter("This is the message"),
+    MsgPrinter* printers[]={new MsgPrinter("This is the message"),
                              new MsgPrinterSurrounding("Surrounded","---Start---","----End----"),
                              new MsgPrinterMultipleSurrounding("Really Surrounded",3,">>>>>>>","<<<<<<<")};
     list <Timer> timers_list;
@@ -80,7 +82,7 @@ void run_timer_4(){
         }
     }
 
-    for(int i=0;i<3;i++)
+    for(int i=0;i<sizeof(printers)/sizeof(MsgPrinter*);i++)
     {
         delete printers[i];
     }

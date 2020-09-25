@@ -9,6 +9,7 @@ int main() {
 
     Time* tm=new Time(400800);
     Time tm5(3,4,1);
+    cout<<*tm;
     cout<<tm->get_as_str(true);
     Time* tm1;
     try {
@@ -53,6 +54,9 @@ int main() {
     run_timer_2();
     run_timer_3();
     run_timer_4();
+
+    cout<<sizeof(int)<<"\n";
+    cout<<sizeof(long)<<"\n";
 
     return 0;
 
